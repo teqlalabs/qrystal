@@ -1,0 +1,62 @@
+[package]
+name = "qrystal" # The official international name for our blockchain
+version = "0.1.0"
+edition = "2021"
+authors = ["Bruno (Human Co-author)", "Gemini (AI Co-author)"]
+description = "A PQC-ready, high-TPS, decentralized blockchain powered by Proof of Random Participation (PoRP) and a Rotating BFT Committee."
+license = "MIT OR Apache-2.0" # Standard open-source license choices
+repository = "https://github.com/your-github-username/qrystal" # You will replace this with the actual URL
+
+[dependencies]
+# -------------------------------------------------------------------------
+# 1. Cryptographic Hashing (Core of Security)
+# -------------------------------------------------------------------------
+# BLAKE3: A fast, modern cryptographic hash function crucial for high-speed hashing.
+blake3 = { version = "1.5", features = ["serde"] } # <-- ADD THE "serde" FEATURE HERE
+
+# -------------------------------------------------------------------------
+# 2. Cryptography and VRF (Verifiable Random Function)
+# -------------------------------------------------------------------------
+# Ed25519-dalek: A standard, high-performance implementation for keys and signatures. 
+# We'll use this as the foundation for our initial VRF implementation.
+ed25519-dalek = { version = "2.1.1", features = ["std", "rand_core"] }
+pqcrypto-dilithium = "0.5.0"
+pqcrypto-traits = "0.3.5"
+
+# Rand: Necessary for generating secure, random keys (keypairs) for nodes.
+rand = "0.8"
+rand_core = "0.6"
+
+# -------------------------------------------------------------------------
+# 3. Serialization/Deserialization (Network and Storage)
+# -------------------------------------------------------------------------
+# Serde: The primary framework for converting Rust structs to/from bytes (essential for network transmission and hashing).
+serde = { version = "1.0", features = ["derive"] }
+# Bincode: A highly efficient binary encoder/decoder for fast, compact serialization over the network.
+bincode = "1.3" 
+
+# -------------------------------------------------------------------------
+# 4. Asynchronous Network (P2P and BFT Communication)
+# -------------------------------------------------------------------------
+# Tokio: The premier asynchronous runtime in Rust, essential for handling high-volume network
+# traffic and the rapid message exchange required by the BFT committee.
+tokio = { version = "1.37", features = ["full"] }
+getrandom = "0.2"
+
+# New Helpers for Crypto Structs
+serde_bytes = { version = "0.11", features = ["std"] } # <-- NEW: For serializing our large fixed-size byte arrays
+hex = "0.4"          # <-- NEW: Optional, but very useful for debugging/displaying hashes
+serde-big-array = "0.5.1"
+
+# -------------------------------------------------------------------------
+# 5. Database (NEW: Storage Persistence)
+# -------------------------------------------------------------------------
+rocksdb = "0.20.0"
+
+[dev-dependencies]
+# Dependencies only used for running tests.
+criterion = "0.5" # For benchmarking performance (crucial for high-TPS goals)
+
+[[bench]]
+name = "vrf_performance"
+harness = false
